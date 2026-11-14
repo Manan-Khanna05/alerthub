@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Calendar</title><desc id="desc">AlertHub calendar icon</desc>
+
+<g fill="none" stroke="#D6E3F8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="14" width="46" height="42" rx="5"/><path d="M21 8v12M43 8v12M9 26h46M20 36h7M36 36h7M20 45h7"/></g>
+</svg>

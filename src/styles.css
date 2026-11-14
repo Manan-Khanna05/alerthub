@@ -1,0 +1,1201 @@
+/* AlertHub — Glass Navy. Tokens live in src/glass-navy-tokens.css
+   (dark :root, light [data-theme="light"]); the app's variables below map
+   onto them so both themes restyle together. Dark is the default. */
+
+:root {
+  --bg: var(--app-bg);
+  --bg-soft: var(--surface-glass-soft);
+  --card: var(--surface-glass);
+  --card-solid: #0e1e38;
+  --card-2: var(--surface-glass-soft);
+  --border: var(--glass-border);
+  --border-strong: var(--ah-border-strong);
+  --text: var(--text-primary);
+  --text-2: var(--text-secondary);
+  --muted: var(--ah-text-muted);
+  --muted-2: var(--ah-text-muted);
+  --accent: var(--accent-blue);
+  --accent-2: var(--accent-violet);
+  --accent-soft: rgb(100 123 255 / 0.14);
+  --accent-text: #9db4ff;
+  --cyan: var(--accent-cyan);
+  --violet: var(--accent-violet);
+  --green: var(--success);
+  --green-soft: rgb(54 214 160 / 0.14);
+  --amber: var(--warning);
+  --amber-soft: rgb(245 189 98 / 0.14);
+  --red: var(--danger);
+  --red-soft: rgb(251 125 145 / 0.14);
+  --shadow: var(--ah-shadow);
+  --shadow-lg: 0 20px 60px rgb(0 0 0 / 0.35);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 24px;
+  --sidebar-w: 248px;
+  --topbar-h: 60px;
+  --bottomnav-h: 62px;
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Spacing scale: 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+}
+
+/* Light mode: same tokens, with higher-contrast status/accent text. */
+[data-theme='light'] {
+  --card-solid: #ffffff;
+  --accent: var(--ah-primary-strong);
+  --accent-soft: rgb(83 111 240 / 0.1);
+  --accent-text: #2f54d8;
+  --green: #17803d;
+  --green-soft: #e5f5ea;
+  --amber: #9a6200;
+  --amber-soft: #fdf1d7;
+  --red: #c22727;
+  --red-soft: #fdeaea;
+  --shadow-lg: 0 12px 40px rgb(38 60 100 / 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--ah-motion-normal, 220ms) var(--ah-ease, ease), color var(--ah-motion-normal, 220ms) var(--ah-ease, ease);
+}
+
+/* Glass Navy: a very subtle cool top tint on dark, flat on light. */
+[data-theme='dark'] body {
+  background:
+    radial-gradient(1100px 480px at 50% -8%, rgb(83 111 240 / 0.10), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+button { font-family: inherit; cursor: pointer; }
+button:active, .btn:active { transform: scale(0.98); }
+input, select, textarea { font-family: inherit; font-size: 14px; color: var(--text); }
+a { color: var(--accent-text); }
+img { max-width: 100%; }
+
+/* Visible keyboard focus everywhere (icon-only controls included). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* UI icons are inline <svg> with stroke="currentColor" (see Icons.tsx —
+   rendering the kit as <img> made currentColor resolve to black). Default
+   20px; the container rules below (nav, buttons, banners…) override where
+   needed. Icons inherit their context's CSS colour; .ah-icon never sets a
+   colour of its own, so nav active / button hover / disabled states flow
+   through. Source logos are <img> and are never recoloured. */
+.ah-icon { width: 20px; height: 20px; display: inline-block; vertical-align: -3px; flex: 0 0 auto; }
+.ah-icon--16 { width: 16px; height: 16px; }
+.ah-icon--18 { width: 18px; height: 18px; }
+.ah-icon--20 { width: 20px; height: 20px; }
+.ah-icon--24 { width: 24px; height: 24px; }
+
+/* ---------- App shell ---------- */
+
+.app-shell { display: flex; min-height: 100vh; position: relative; }
+
+/* ==========================================================================
+   Aurora / wave background — Complete Glass Navy (13 Nov 2026).
+   .aurora-bg is a fixed layer (z-index 0) mounted as the first child of
+   .app-shell in App.tsx. Everything interactive sits above it: .main and
+   .content establish their own stacking contexts (position + z-index 1),
+   the sidebar/topbar are positioned with z-index, and fixed overlays
+   (drawer, sheet, banner, toast, bottom nav) carry their own high z-index.
+   The layer is pointer-events: none and overflow: hidden, so it can never
+   cause horizontal overflow or intercept input.
+   Layers, top to bottom in paint order:
+   1. base deep-navy gradient on .aurora-bg itself
+   2. four drifting radial-gradient blobs (blue / cyan / violet / indigo)
+   3. two thin translucent light ribbons (liquid streaks)
+   4. one SVG wave ribbon across the upper area (markup in App.tsx)
+   ========================================================================== */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 620px at 88% -12%, rgb(100 123 255 / 0.20), transparent 62%),
+    radial-gradient(900px 520px at 6% -6%, rgb(40 198 232 / 0.12), transparent 60%),
+    linear-gradient(180deg, #071426 0%, #08172B 55%, #0B1930 100%);
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+/* b1 electric blue, upper right — the hero glow behind the dashboard. */
+.aurora-blob-b1 {
+  top: -14%; right: -6%;
+  width: 560px; height: 560px;
+  background: radial-gradient(circle at center, rgb(100 123 255 / 0.55), rgb(100 123 255 / 0.12) 55%, transparent 70%);
+  filter: blur(70px);
+  opacity: .75;
+  animation: aurora-drift-a 26s ease-in-out infinite alternate;
+}
+/* b2 ocean cyan, upper left / centre. */
+.aurora-blob-b2 {
+  top: -18%; left: -8%;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle at center, rgb(40 198 232 / 0.45), rgb(40 198 232 / 0.10) 55%, transparent 70%);
+  filter: blur(80px);
+  opacity: .6;
+  animation: aurora-drift-b 30s ease-in-out infinite alternate;
+}
+/* b3 soft violet, lower right. */
+.aurora-blob-b3 {
+  bottom: -24%; right: 6%;
+  width: 520px; height: 520px;
+  background: radial-gradient(circle at center, rgb(165 108 255 / 0.42), rgb(165 108 255 / 0.10) 55%, transparent 70%);
+  filter: blur(75px);
+  opacity: .6;
+  animation: aurora-drift-c 24s ease-in-out infinite alternate;
+}
+/* b4 subtle indigo, lower left. */
+.aurora-blob-b4 {
+  bottom: -18%; left: -6%;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle at center, rgb(83 111 240 / 0.38), transparent 68%);
+  filter: blur(65px);
+  opacity: .5;
+  animation: aurora-drift-d 28s ease-in-out infinite alternate;
+}
+@keyframes aurora-drift-a { from { transform: translate(0, 0) scale(1); } to { transform: translate(-46px, 34px) scale(1.08); } }
+@keyframes aurora-drift-b { from { transform: translate(0, 0) scale(1.05); } to { transform: translate(52px, 28px) scale(0.96); } }
+@keyframes aurora-drift-c { from { transform: translate(0, 0) scale(1); } to { transform: translate(-38px, -30px) scale(1.07); } }
+@keyframes aurora-drift-d { from { transform: translate(0, 0) scale(0.97); } to { transform: translate(44px, -26px) scale(1.06); } }
+
+/* Thin translucent light ribbons — the liquid feel. */
+.aurora-ribbon {
+  position: absolute;
+  left: -12%;
+  width: 124%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgb(40 198 232 / 0.35) 30%, rgb(165 108 255 / 0.30) 62%, transparent);
+  filter: blur(5px);
+  opacity: .5;
+  transform: rotate(-7deg);
+}
+.aurora-ribbon-r1 { top: 19%; animation: aurora-ribbon-drift 30s ease-in-out infinite alternate; }
+.aurora-ribbon-r2 {
+  top: 31%;
+  height: 1px;
+  transform: rotate(-5deg);
+  background: linear-gradient(90deg, transparent, rgb(100 123 255 / 0.28) 35%, rgb(40 198 232 / 0.22) 65%, transparent);
+  opacity: .35;
+}
+@keyframes aurora-ribbon-drift { from { transform: rotate(-7deg) translateX(0); } to { transform: rotate(-7deg) translateX(26px); } }
+
+/* SVG wave ribbon (markup lives in App.tsx): 120% wide so the slow
+   horizontal displacement never exposes an edge. */
+.aurora-wave {
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 120%;
+  height: 340px;
+  opacity: .85;
+  animation: aurora-wave-x 26s ease-in-out infinite alternate;
+}
+@keyframes aurora-wave-x { from { transform: translateX(-2.5%); } to { transform: translateX(2.5%); } }
+
+/* Light theme: the same structure, much subtler — soft pastel washes on
+   the pale #F2F6FC base, so white glass panels stay crisp. */
+[data-theme="light"] .aurora-bg {
+  background:
+    radial-gradient(1200px 620px at 88% -12%, rgb(83 111 240 / 0.14), transparent 62%),
+    radial-gradient(900px 520px at 6% -6%, rgb(18 165 196 / 0.10), transparent 60%),
+    radial-gradient(1000px 600px at 50% 115%, rgb(124 77 255 / 0.08), transparent 62%),
+    linear-gradient(180deg, #F2F6FC 0%, #EDF3FB 55%, #E9F0FA 100%);
+}
+[data-theme="light"] .aurora-blob-b1 { background: radial-gradient(circle at center, rgb(83 111 240 / 0.30), transparent 70%); opacity: .5; }
+[data-theme="light"] .aurora-blob-b2 { background: radial-gradient(circle at center, rgb(18 165 196 / 0.26), transparent 70%); opacity: .45; }
+[data-theme="light"] .aurora-blob-b3 { background: radial-gradient(circle at center, rgb(124 77 255 / 0.24), transparent 70%); opacity: .45; }
+[data-theme="light"] .aurora-blob-b4 { background: radial-gradient(circle at center, rgb(83 111 240 / 0.20), transparent 68%); opacity: .4; }
+[data-theme="light"] .aurora-ribbon { opacity: .28; }
+[data-theme="light"] .aurora-ribbon-r2 { opacity: .2; }
+[data-theme="light"] .aurora-wave { opacity: .5; }
+
+/* Reduced motion: the aurora holds its static gradient state. (The global
+   rule in glass-navy-tokens.css also damps every animation; this makes the
+   intent explicit for the aurora layers.) */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob, .aurora-ribbon, .aurora-wave { animation: none !important; }
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  background: linear-gradient(180deg, var(--surface-glass-strong), var(--surface-glass));
+  border-right: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 100vh;
+  padding: 18px 14px 14px;
+  gap: 4px;
+}
+
+.sidebar-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 2px 8px 16px; }
+.sidebar-logo img { height: 34px; width: auto; display: block; max-width: 100%; }
+.sidebar-tag {
+  font-size: 11px; color: var(--muted); line-height: 1.3;
+}
+/* Tagline under the wordmark ("NOTIFICATION COMMAND CENTER", Worker B).
+   Uppercase, wide tracking, muted — matches the dark reference's grouped
+   sidebar labels. */
+.sidebar-logo-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.nav-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted-2);
+  padding: 12px 10px 6px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; text-align: left;
+  padding: 9px 10px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; color: var(--text-2);
+  font-size: 14px; font-weight: 500;
+  position: relative;
+  transition: background var(--ah-motion-fast, 150ms) var(--ah-ease, ease), color var(--ah-motion-fast, 150ms) var(--ah-ease, ease), box-shadow var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+.nav-item:hover { background: var(--bg-soft); color: var(--text); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgb(100 123 255 / 0.22), rgb(165 108 255 / 0.14));
+  color: var(--accent-text); font-weight: 600;
+}
+/* Left accent bar on the active item — subtle blue→violet gradient. */
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--accent-blue), var(--accent-violet));
+}
+[data-theme="light"] .nav-item.active {
+  background: linear-gradient(90deg, rgb(83 111 240 / 0.12), rgb(124 77 255 / 0.08));
+  color: var(--accent-text);
+}
+.nav-item .nav-icon { width: 19px; height: 19px; flex: 0 0 19px; display: inline-flex; }
+.nav-item .nav-icon svg, .nav-item .nav-icon img { width: 19px; height: 19px; }
+/* Source logos (Gmail/CUIMS) in nav: the mark itself, never recoloured. */
+.nav-item .nav-icon .source-mark { width: 19px; height: 19px; min-width: 0; min-height: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.nav-item .nav-icon .source-mark img { width: 19px; height: 19px; }
+.nav-badge {
+  margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.sidebar-footer {
+  margin-top: auto; padding: 12px 10px 2px;
+  border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+.sidebar-footer strong { color: var(--text-2); display: block; font-size: 13px; }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; z-index: 1; }
+
+.topbar {
+  height: var(--topbar-h);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 24px;
+  background: linear-gradient(180deg, var(--surface-glass-strong), var(--surface-glass));
+  border-bottom: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  position: sticky; top: 0; z-index: 30;
+}
+/* Brand symbol in the compact app bar (mobile only — the desktop sidebar
+   carries the wordmark). */
+.topbar-brand { display: none; align-items: center; flex: 0 0 auto; }
+.topbar-brand img { height: 30px; width: auto; display: block; }
+.topbar-titles { min-width: 0; }
+.topbar-titles .topbar-title { overflow: hidden; text-overflow: ellipsis; }
+.topbar-title { font-size: 16px; font-weight: 700; margin: 0; white-space: nowrap; }
+.topbar-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-spacer { flex: 1; }
+.topbar-clock { font-size: 12px; color: var(--muted); text-align: right; line-height: 1.35; }
+.topbar-clock strong { color: var(--text-2); display: block; font-size: 13px; }
+
+/* Top-bar search + actions. */
+.topbar-search {
+  display: flex; align-items: center; gap: 8px;
+  flex: 0 1 320px; min-width: 0;
+  background: var(--card-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 0 10px; height: 38px;
+  transition: border-color var(--ah-motion-fast, 150ms) var(--ah-ease, ease), box-shadow var(--ah-motion-fast, 150ms) var(--ah-ease, ease), background var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+.topbar-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: var(--surface-glass-strong);
+}
+.topbar-search svg, .topbar-search img { width: 17px; height: 17px; color: var(--ah-icon); flex: 0 0 auto; }
+.topbar-search input {
+  border: 0; outline: none; background: transparent;
+  font-size: 13.5px; width: 100%; min-width: 0; padding: 0;
+}
+.topbar-actions { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.topbar-bell { position: relative; }
+/* Header bell badge: small corner pill, offset OUTSIDE the bell outline so the
+   17px bell stays fully visible. Anchored to the button's top-right corner
+   (top/right -3px) — it only kisses the bell's top-right corner. Uses the
+   coral/red alert token (--danger) per the Glass Navy spec for the unread
+   indicator. Sidebar/bottom-nav badges (.nav-badge) are NOT touched. */
+.topbar-bell .nav-badge {
+  position: absolute; top: -3px; right: -3px; margin: 0;
+  min-width: 15px; height: 15px; padding: 0 3px; font-size: 9px; line-height: 1;
+  background: var(--danger);
+  box-shadow: 0 0 0 2px var(--ah-bg);
+}
+.topbar-account {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border); background: var(--card);
+  border-radius: 999px; padding: 3px 10px 3px 3px;
+  font-size: 13px; font-weight: 600; color: var(--text-2);
+  transition: border-color var(--ah-motion-fast, 150ms) var(--ah-ease, ease), background var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+.topbar-account:hover { border-color: var(--border-strong); background: var(--surface-glass-strong); }
+.topbar-account .avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex: 0 0 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-size: 12px; font-weight: 700;
+}
+.account-pop {
+  position: absolute; top: calc(var(--topbar-h) - 6px); right: 16px; z-index: 50;
+  width: 260px; padding: 14px;
+  /* OPAQUE overlay: the account menu floats over page content. */
+  background: var(--card-solid); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.account-pop strong { display: block; font-size: 14px; }
+.account-pop span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; overflow-wrap: break-word; }
+.account-pop .btn { margin-top: 10px; }
+.topbar-search-btn { display: none; }
+.account-backdrop { position: fixed; inset: 0; z-index: 49; background: transparent; }
+
+/* Narrow desktop: hide the clock + account name so search and actions fit. */
+@media (max-width: 1100px) {
+  .topbar-clock { display: none; }
+  .account-name { display: none; }
+  .topbar-account { padding: 3px; border-radius: 50%; }
+}
+
+/* Hamburger button: hidden on desktop (the sidebar shows there), shown
+   below 760px where the sidebar is hidden — including the installed app. */
+.menu-btn {
+  display: none;
+  border: 0; background: transparent; color: var(--text-2);
+  width: 40px; height: 40px; border-radius: 10px; flex: 0 0 40px;
+  align-items: center; justify-content: center; cursor: pointer;
+  margin-left: -8px;
+}
+.menu-btn svg, .menu-btn img { width: 22px; height: 22px; }
+.menu-btn:active { background: var(--bg-soft); }
+
+/* ---------- Mobile navigation drawer ---------- */
+
+.nav-drawer-root {
+  position: fixed; inset: 0; z-index: 70; visibility: hidden;
+}
+.nav-drawer-root.open { visibility: visible; }
+.nav-drawer-backdrop {
+  position: absolute; inset: 0; background: rgb(10 16 32 / 0.6);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.nav-drawer-root.open .nav-drawer-backdrop { opacity: 1; }
+.nav-drawer {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: min(320px, 85vw);
+  /* OPAQUE overlay: the drawer floats over page content, so it must use
+     the solid surface — translucent glass + no blur (mobile strips
+     backdrop-filter) let the page behind mix with the menu text. */
+  background: var(--card-solid); border-right: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  padding: 16px 14px 20px; overflow-y: auto;
+  transform: translateX(-100%); transition: transform 0.22s ease;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.nav-drawer-root.open .nav-drawer { transform: translateX(0); }
+.nav-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 4px 12px;
+}
+.nav-drawer-head img { height: 30px; width: auto; display: block; }
+.nav-drawer-profile {
+  padding: 2px 10px 12px; border-bottom: 1px solid var(--border);
+}
+.nav-drawer-profile strong { display: block; font-size: 15px; color: var(--text-2); }
+.nav-drawer-profile span { font-size: 12px; color: var(--muted); }
+
+/* Numbered setup steps (server push card). */
+.setup-steps { margin: 10px 0 0; padding-left: 20px; font-size: 13.5px; line-height: 1.7; color: var(--text-2); }
+.setup-steps li + li { margin-top: 4px; }
+
+.content {
+  flex: 1; width: 100%; max-width: 1080px;
+  margin: 0 auto; padding: 24px 24px 40px;
+  min-width: 0;
+  position: relative; z-index: 1;
+}
+
+/* Page transition: the view wrapper mounted in App.tsx
+   (<div className="page-view" key={view}>). Fade + 4px rise, 200ms. */
+.page-view { animation: page-view-in 200ms var(--ah-ease) both; }
+@keyframes page-view-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .page-view { animation: none; }
+}
+
+/* Welcome hero (Overview, Worker C): transparent — it sits on the aurora.
+   Large greeting with a gradient accent word, secondary subtitle. */
+.welcome-hero { padding: 6px 2px 20px; }
+.welcome-hero h1 {
+  font-size: 26px; font-weight: 800; letter-spacing: -0.02em;
+  line-height: 1.2; margin: 0 0 6px;
+}
+.welcome-hero .welcome-accent {
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan) 55%, var(--accent-violet));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.welcome-hero p { margin: 0; font-size: 14px; color: var(--text-2); line-height: 1.55; }
+
+.page-head { margin-bottom: 18px; }
+.page-head h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.page-head p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+/* ---------- Bottom nav (mobile) ---------- */
+
+.bottom-nav {
+  display: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  /* OPAQUE: the fixed bottom bar floats over scrolling page content. */
+  background: var(--card-solid);
+  border-top: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  align-items: stretch;
+}
+.bottom-nav button {
+  flex: 1; border: 0; background: transparent;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; font-size: 11px; font-weight: 600; color: var(--muted);
+  padding: 6px 2px 4px; min-width: 0; min-height: 44px;
+}
+.bottom-nav button.active { color: var(--accent-text); }
+.bottom-nav button svg, .bottom-nav button img { width: 21px; height: 21px; }
+.bottom-nav .nav-badge { margin: 0; position: absolute; top: 4px; margin-left: 26px; }
+
+/* ---------- Cards / grids ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow), inset 0 1px 0 rgb(255 255 255 / 0.05);
+  -webkit-backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  padding: 18px;
+  min-width: 0;
+  position: relative;
+  transition: transform var(--ah-motion-fast, 150ms) var(--ah-ease, ease), border-color var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+/* Restrained hover lift on dashboard/stat/source cards only. */
+.stat-card:hover, .source-card:hover { transform: translateY(-1px); border-color: var(--border-strong); }
+
+/* Per-card accent glow (other workers apply these): a soft radial glow at
+   the card's top edge in the accent colour, via ::before. The gradient
+   fades to transparent, so no overflow clipping is needed. */
+.glow-blue, .glow-cyan, .glow-violet, .glow-green { overflow: visible; }
+.glow-blue::before, .glow-cyan::before, .glow-violet::before, .glow-green::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.glow-blue::before { background: radial-gradient(420px 120px at 50% 0%, rgb(100 123 255 / 0.20), transparent 70%); }
+.glow-cyan::before { background: radial-gradient(420px 120px at 50% 0%, rgb(40 198 232 / 0.18), transparent 70%); }
+.glow-violet::before { background: radial-gradient(420px 120px at 50% 0%, rgb(165 108 255 / 0.20), transparent 70%); }
+.glow-green::before { background: radial-gradient(420px 120px at 50% 0%, rgb(54 214 160 / 0.16), transparent 70%); }
+.card + .card { margin-top: 16px; }
+.card h2 { font-size: 15px; margin: 0 0 4px; }
+.card h3 { font-size: 14px; margin: 0 0 4px; }
+.card .card-sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.grid-2 > .card + .card { margin-top: 0; }
+.grid-main { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.grid-main > .card + .card { margin-top: 0; }
+.stack > * + * { margin-top: 16px; }
+
+.stat-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;
+  margin-bottom: 16px;
+}
+.stat-card { padding: 16px; }
+.stat-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.stat-card .stat-logo .source-mark { width: 36px; height: 36px; flex-basis: 36px; }
+.stat-card .stat-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-card .stat-value { font-size: 30px; font-weight: 800; line-height: 1.15; margin-top: 4px; letter-spacing: -0.02em; }
+.stat-card .stat-note { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+/* ---------- Buttons / inputs ---------- */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  border: 1px solid var(--border-strong);
+  background: var(--card); color: var(--text);
+  border-radius: var(--radius-sm); padding: 8px 14px;
+  font-size: 13.5px; font-weight: 600; text-decoration: none;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--bg-soft); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent; color: #fff;
+}
+.btn-primary:hover { filter: brightness(1.07); background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.btn-danger { color: var(--red); border-color: var(--red); background: transparent; }
+.btn-danger:hover { background: var(--red-soft); }
+.btn-sm { padding: 6px 10px; font-size: 12.5px; }
+.btn-block { width: 100%; }
+
+.icon-btn {
+  border: 1px solid transparent; background: transparent; color: var(--ah-icon);
+  width: 32px; height: 32px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  transition: background var(--ah-motion-fast, 150ms) var(--ah-ease, ease), color var(--ah-motion-fast, 150ms) var(--ah-ease, ease), border-color var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+.icon-btn:hover { background: var(--bg-soft); color: var(--ah-icon-hover); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-btn:disabled { color: var(--ah-icon-disabled); opacity: .6; cursor: not-allowed; }
+.icon-btn svg, .icon-btn img { width: 17px; height: 17px; }
+.icon-btn.active { color: var(--ah-icon-active); background: var(--accent-soft); }
+.icon-btn.danger:hover { color: var(--red); background: var(--red-soft); }
+
+.input, .select, .textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--card); outline: none;
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.textarea { min-height: 84px; resize: vertical; }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; }
+.field .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.switch-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+}
+.switch-row:last-child { border-bottom: 0; }
+.switch-row .switch-text strong { display: block; font-size: 13.5px; font-weight: 600; }
+.switch-row .switch-text span { font-size: 12.5px; color: var(--muted); }
+
+.switch {
+  position: relative; width: 42px; height: 24px; flex: 0 0 auto;
+  border: 0; background: var(--border-strong); border-radius: 999px; padding: 0;
+  transition: background 0.15s;
+}
+.switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3); transition: left 0.15s;
+}
+.switch[aria-checked='true'] { background: var(--accent); }
+.switch[aria-checked='true']::after { left: 21px; }
+.switch:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- Badges / pills ---------- */
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill-ok { background: var(--green-soft); color: var(--green); }
+.pill-warn { background: var(--amber-soft); color: var(--amber); }
+.pill-bad { background: var(--red-soft); color: var(--red); }
+.pill-neutral { background: var(--bg-soft); color: var(--muted); }
+.pill-accent { background: var(--accent-soft); color: var(--accent-text); }
+.pill-no-dot::before { display: none; }
+
+.sev-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 2px 7px; border-radius: 6px; border: 1px solid var(--border);
+  color: var(--muted); background: var(--card-2); white-space: nowrap;
+}
+.sev-important { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+.sev-critical { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+
+/* ---------- Alerts ---------- */
+
+.alert-list { display: flex; flex-direction: column; }
+.alert-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 10px; border-bottom: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer; min-width: 0;
+  transition: background var(--ah-motion-fast, 150ms) var(--ah-ease, ease);
+}
+.alert-row:last-child { border-bottom: 0; }
+.alert-row:hover { background: var(--card-2); }
+.alert-row.unread { background: linear-gradient(90deg, var(--accent-soft), transparent 55%); }
+.alert-row.unread:hover { background: var(--accent-soft); }
+/* Light theme: clean white/translucent rows with soft separators, airy
+   like the light notifications reference. */
+[data-theme="light"] .alert-row { border-bottom-color: rgb(63 91 143 / 0.08); }
+[data-theme="light"] .alert-row:hover { background: rgb(255 255 255 / 0.65); }
+[data-theme="light"] .alert-row.unread { background: linear-gradient(90deg, rgb(83 111 240 / 0.07), transparent 60%); }
+[data-theme="light"] .alert-row.unread:hover { background: rgb(83 111 240 / 0.10); }
+.alert-unread-dot {
+  width: 8px; height: 8px; border-radius: 50%; margin-top: 7px; flex: 0 0 8px;
+  background: var(--accent);
+}
+.alert-unread-dot.read { background: transparent; border: 1.5px solid var(--border-strong); }
+.alert-body { flex: 1; min-width: 0; }
+.alert-title-row { display: flex; align-items: baseline; gap: 8px; }
+.alert-title {
+  font-size: 14px; font-weight: 600; margin: 0; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.alert-row.unread .alert-title { font-weight: 700; }
+.alert-time { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; flex: 0 0 auto; }
+.alert-preview {
+  margin: 2px 0 0; font-size: 13px; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.alert-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  margin-top: 6px; font-size: 12px; color: var(--muted);
+}
+.alert-actions { display: flex; gap: 2px; flex: 0 0 auto; }
+.alert-source-icon { width: 36px; height: 36px; color: var(--muted); flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; }
+.alert-source-icon svg, .alert-source-icon img { width: 20px; height: 20px; }
+/* A source logo in the row fills the 36px slot (never stretched). */
+.alert-source-icon .source-mark { width: 36px; height: 36px; flex-basis: 36px; border: 0; background: transparent; border-radius: 0; }
+.alert-source-icon .source-mark img { padding: 2px; }
+/* Source mark container: Gmail/CUIMS logos, 36–44px desktop, 32–40px mobile.
+   Logos are never stretched or recoloured — the img keeps its own colours. */
+.source-mark {
+  width: 40px; height: 40px; flex: 0 0 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 11px; background: var(--card-2);
+  border: 1px solid var(--border); color: var(--accent-text);
+  overflow: hidden;
+}
+.source-mark img { width: 100%; height: 100%; object-fit: contain; padding: 5px; display: block; }
+.source-mark svg { width: 21px; height: 21px; }
+.source-mark.source-mark-sm { width: 36px; height: 36px; flex-basis: 36px; }
+/* Gmail: white/light tile behind the multicolour M (pack §5). */
+.source-mark--gmail { background: rgba(255, 255, 255, .96); }
+/* Source marks with their own baked-in tile (CUIMS gradient, Tasks green,
+   System blue, Webhook violet, Web Push cyan-blue): no second tile. */
+.source-mark--bare { background: transparent; border-color: transparent; }
+.source-mark--bare img { padding: 0; }
+/* Multicolour source logos are never filtered or recoloured. */
+.source-mark img, .ah-brand img { filter: none !important; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.chip {
+  border: 1px solid var(--border-strong); background: var(--card); color: var(--text-2);
+  border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip .source-mark { width: 18px; height: 18px; flex-basis: 18px; border: 0; background: transparent; border-radius: 0; }
+.chip .source-mark img { padding: 0; }
+.chip:hover { background: var(--bg-soft); }
+.chip.active { background: var(--text); color: var(--card); border-color: var(--text); }
+[data-theme='dark'] .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.toolbar .input { flex: 1; min-width: 180px; }
+.toolbar .select { width: auto; min-width: 150px; }
+
+/* ---------- Detail sheet ---------- */
+
+.sheet-backdrop {
+  position: fixed; inset: 0; background: rgb(10 16 32 / 0.6); z-index: 60;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  display: flex; justify-content: flex-end;
+}
+.sheet {
+  width: min(560px, 100%); height: 100%; overflow-y: auto;
+  /* OPAQUE overlay: the detail sheet floats over the alerts list, so it
+     must use the solid surface — translucent glass + no blur (mobile
+     strips backdrop-filter) let the list behind mix with the detail text.
+     The explicit `none` also overrides the `.glass` class on this element. */
+  background: var(--card-solid); box-shadow: var(--shadow-lg);
+  border-left: 1px solid var(--border);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  padding: 22px 22px 40px; animation: slide-in 0.18s ease-out;
+}
+@keyframes slide-in { from { transform: translateX(30px); opacity: 0.5; } to { transform: none; opacity: 1; } }
+.sheet h2 { font-size: 18px; margin: 0 0 6px; line-height: 1.35; }
+/* Source row at the top of the detail sheet: logo + label + timestamp. */
+.sheet-source {
+  display: flex; gap: 12px; align-items: center;
+  margin: 10px 0 16px;
+}
+.sheet-source strong { display: block; font-size: 14px; }
+.sheet-source span { font-size: 12.5px; color: var(--muted); }
+.sheet .sheet-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 16px; }
+.sheet-body {
+  white-space: pre-wrap; overflow-wrap: break-word;
+  font-size: 14px; line-height: 1.65; color: var(--text-2);
+  border-top: 1px solid var(--border); padding-top: 16px;
+}
+.kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 12px; font-size: 13px; margin: 14px 0; }
+.kv dt { color: var(--muted); font-weight: 600; }
+.kv dd { margin: 0; overflow-wrap: anywhere; }
+.sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+/* ---------- Source cards ---------- */
+
+.source-card-head { display: flex; align-items: flex-start; gap: 12px; }
+.source-icon {
+  width: 40px; height: 40px; border-radius: 11px; flex: 0 0 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); color: var(--accent-text);
+  overflow: hidden;
+}
+.source-icon svg, .source-icon img { width: 21px; height: 21px; }
+/* A source logo inside a source card fills the tile (never stretched). */
+.source-icon .source-mark { width: 100%; height: 100%; border: 0; background: transparent; border-radius: 0; }
+.source-icon .source-mark img { padding: 4px; }
+.source-card-head h3 { font-size: 15px; margin: 0; }
+.source-card-head .src-sub { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.source-card-head .pill { margin-left: auto; }
+.source-detail { font-size: 13.5px; color: var(--text-2); margin: 12px 0; overflow-wrap: break-word; }
+.source-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.source-foot .spacer { flex: 1; }
+
+/* Phone notification preview (Devices page): what the system notification
+   looks like — app icon, title, body. */
+.phone-preview {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-top: 16px; padding: 12px 14px;
+  background: var(--card-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.phone-preview img { width: 36px; height: 36px; border-radius: 9px; flex: 0 0 36px; }
+.phone-preview strong { display: block; font-size: 13.5px; }
+.phone-preview span { font-size: 12.5px; color: var(--muted); display: block; }
+.phone-preview .phone-preview-time { margin-left: auto; font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+
+/* ---------- Toast ---------- */
+
+.toast-wrap {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  z-index: 100; width: min(480px, calc(100vw - 32px));
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: flex-start; gap: 10px;
+  /* OPAQUE overlay: the toast floats over page content. */
+  background: var(--card-solid); color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px; padding: 12px 16px; box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: 13.5px; font-weight: 500; pointer-events: auto;
+  animation: toast-in 0.18s ease-out;
+}
+@keyframes toast-in { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+.toast .toast-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 5px; flex: 0 0 9px; background: var(--accent); }
+.toast.success .toast-dot { background: #3ecf7a; }
+.toast.error .toast-dot { background: #ff6b6b; }
+.toast button { margin-left: auto; background: transparent; border: 0; color: inherit; opacity: 0.7; font-size: 16px; line-height: 1; padding: 0 2px; }
+
+/* ---------- Empty state / misc ---------- */
+
+.empty {
+  text-align: center; padding: 36px 20px; color: var(--muted);
+}
+.empty .empty-icon {
+  width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 14px;
+  background: var(--bg-soft); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.empty .empty-icon svg, .empty .empty-icon img { width: 26px; height: 26px; }
+.empty strong { display: block; color: var(--text-2); font-size: 15px; margin-bottom: 4px; }
+.empty p { margin: 0 0 14px; font-size: 13.5px; }
+
+.code-block {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px; line-height: 1.6; overflow-x: auto; white-space: pre;
+  color: var(--text-2); margin: 0;
+}
+.mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12.5px; overflow-wrap: anywhere; }
+.note {
+  background: var(--amber-soft); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  font-size: 13px; color: var(--text-2); margin: 12px 0;
+}
+.note.info { background: var(--accent-soft); }
+.note.bad { background: var(--red-soft); }
+.note.good { background: var(--green-soft); }
+.note p { margin: 0; }
+.note p + p { margin-top: 6px; }
+
+.list-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 0; border-bottom: 1px solid var(--border); min-width: 0;
+}
+.list-row:last-child { border-bottom: 0; }
+.list-row .row-main { flex: 1; min-width: 0; }
+.list-row .row-main strong { display: block; font-size: 13.5px; overflow-wrap: break-word; }
+.list-row .row-main span { font-size: 12.5px; color: var(--muted); display: block; }
+
+.task-done strong { text-decoration: line-through; color: var(--muted); }
+
+.form-inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.form-inline .field { flex: 1; min-width: 160px; margin-bottom: 0; }
+.form-inline .field.narrow { flex: 0 0 170px; min-width: 140px; }
+
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 500; color: var(--text-2); }
+.checkbox-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.key-box {
+  display: flex; gap: 8px; align-items: center;
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 12px; margin: 8px 0;
+}
+.key-box code { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 12.5px; }
+
+.profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+.profile-grid .pf label { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-2); margin-bottom: 2px; }
+.profile-grid .pf div { font-size: 14px; font-weight: 600; overflow-wrap: break-word; }
+
+/* ---------- CUIMS marks ---------- */
+
+.marks-subject { margin-top: 18px; }
+.marks-subject-head {
+  display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline;
+  margin-bottom: 6px;
+}
+.marks-subject-head strong { font-size: 14.5px; }
+.marks-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.marks-table th,
+.marks-table td { padding: 7px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+.marks-table th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-2); }
+.marks-table .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.marks-table tr:last-child td { border-bottom: 0; }
+
+/* ---------- CUIMS analytics ---------- */
+
+.cuims-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+
+.radar-detail {
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+.radar-detail-head {
+  display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center;
+}
+.radar-detail-head strong { font-size: 14.5px; }
+.radar-detail-head .grade-pill { margin-left: auto; }
+
+.sgpa-hero { text-align: center; padding: 10px 0 6px; }
+.sgpa-hero .sgpa-value {
+  font-size: 46px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.sgpa-hero .pill { margin-top: 6px; }
+
+.table-scroll { overflow-x: auto; margin: 0 -2px; padding: 0 2px; }
+
+.analytics-table {
+  width: 100%; min-width: 540px;
+  border-collapse: collapse; font-size: 13.5px;
+}
+.analytics-table th,
+.analytics-table td { padding: 8px; text-align: left; border-bottom: 1px solid var(--border); }
+.analytics-table th {
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--muted-2); white-space: nowrap;
+}
+.analytics-table .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.analytics-table tr:last-child td { border-bottom: 0; }
+.analytics-table tr.total-row td { border-top: 2px solid var(--border-strong); }
+
+.credit-input {
+  width: 62px; padding: 5px 6px; text-align: center;
+  border: 1px solid var(--border-strong); border-radius: 8px;
+  background: var(--card); font-variant-numeric: tabular-nums; font-weight: 600;
+}
+.credit-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
+
+.grade-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 30px; padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; white-space: nowrap;
+}
+.grade-a { background: var(--green-soft); color: var(--green); }
+.grade-b { background: var(--accent-soft); color: var(--accent-text); }
+.grade-c { background: var(--amber-soft); color: var(--amber); }
+.grade-low { background: var(--red-soft); color: var(--red); }
+
+.focus-list { margin: 4px 0 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; color: var(--text-2); }
+.focus-list li + li { margin-top: 8px; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 960px) {
+  .grid-main { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .sidebar { display: none; }
+  .bottom-nav { display: flex; }
+  .menu-btn { display: inline-flex; }
+  .topbar-brand { display: inline-flex; }
+  .topbar-search { display: none; }
+  .topbar-search-btn { display: inline-flex; }
+  .topbar-clock { display: none; }
+  .topbar-sub { display: none; }
+  .content { padding: 18px 16px calc(40px + var(--bottomnav-h)); }
+  .topbar { padding: 0 16px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-2 > .card + .card { margin-top: 16px; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .kv { grid-template-columns: 104px 1fr; }
+  .alert-actions .icon-btn.hide-mobile { display: none; }
+  .sheet { padding: 18px 16px 48px; }
+  .form-inline .field.narrow { flex: 1 1 140px; }
+  /* Mobile: less blur (performance + legibility), solid card surfaces. */
+  .card, .sheet, .nav-drawer { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .card { background: var(--card-solid); }
+  /* Aurora on mobile: no filter blur on the blobs (soft radial gradients
+     only), smaller shapes, shorter wave — same identity, readability first. */
+  .aurora-blob { filter: none; }
+  .aurora-blob-b1 { width: 340px; height: 340px; top: -10%; right: -24%; }
+  .aurora-blob-b2 { width: 300px; height: 300px; top: -12%; left: -30%; }
+  .aurora-blob-b3 { width: 320px; height: 320px; bottom: -18%; right: -20%; }
+  .aurora-blob-b4 { display: none; }
+  .aurora-ribbon-r2 { display: none; }
+  .aurora-wave { height: 180px; opacity: .6; }
+  [data-theme="light"] .aurora-wave { opacity: .4; }
+  /* Touch targets ≥44px on mobile. */
+  .icon-btn { width: 44px; height: 44px; min-height: 44px; }
+  .btn { min-height: 44px; }
+  .source-mark { width: 36px; height: 36px; flex-basis: 36px; }
+  .alert-source-icon { width: 32px; height: 32px; }
+  .account-pop { right: 12px; width: min(260px, calc(100vw - 24px)); }
+}
+
+@media (max-width: 390px) {
+  .stat-grid { gap: 10px; }
+  .stat-card .stat-value { font-size: 25px; }
+  .content { padding-left: 12px; padding-right: 12px; }
+  .card { padding: 14px; }
+  .alert-title { font-size: 13.5px; }
+  .welcome-hero h1 { font-size: 22px; }
+  .welcome-hero { padding-bottom: 16px; }
+}
+
+/* Very small phones: the top bar keeps only the essentials. */
+@media (max-width: 480px) {
+  .topbar-refresh { display: none; }
+  .topbar-account { display: none; }
+}
+
+/* ==========================================================================
+   Notification banner + diagnostics — frontend push agent, 13 Nov 2026.
+   Everything in this section belongs to the foreground NotificationBanner
+   (src/components/NotificationBanner.tsx) and the Devices page diagnostics.
+   Do not edit the styles above this block for banner work.
+   ========================================================================== */
+
+.notif-banner {
+  position: fixed;
+  top: calc(var(--topbar-h) + 12px);
+  right: 20px;
+  z-index: 90;
+  width: min(380px, calc(100vw - 32px));
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  /* OPAQUE overlay: the banner floats over page content (it previously
+     had no backdrop-filter at all, so its glass was fully see-through). */
+  background: var(--card-solid);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: notif-banner-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes notif-banner-in {
+  from { transform: translateY(-10px) translateX(12px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.notif-banner-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.notif-banner-icon svg, .notif-banner-icon img { width: 19px; height: 19px; }
+/* A source logo in the banner fills the icon tile (never stretched). */
+.notif-banner-icon .source-mark { width: 100%; height: 100%; border: 0; background: transparent; border-radius: 0; }
+.notif-banner-icon .source-mark img { padding: 4px; }
+
+.notif-banner-body { flex: 1 1 auto; min-width: 0; }
+
+.notif-banner-meta {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.notif-banner-flag {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.notif-banner-title {
+  display: block;
+  font-size: 14px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.notif-banner-desc {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notif-banner-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.notif-banner-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.notif-banner-close:hover { background: var(--bg-soft); color: var(--text); }
+
+/* More prominent styling for important / critical / academic alerts. */
+.notif-banner-prominent {
+  border-left-color: var(--red);
+  border-width: 1px 1px 1px 5px;
+  box-shadow:
+    0 0 0 1px rgb(194 39 39 / 0.25),
+    var(--shadow-lg);
+}
+
+.notif-banner-prominent .notif-banner-icon {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.notif-banner-academic { border-left-color: var(--accent-2); }
+
+.notif-banner-prominent.notif-banner-academic {
+  border-left-color: var(--red);
+}
+
+.notif-banner.sev-critical .notif-banner-title { color: var(--red); }
+
+@media (max-width: 760px) {
+  /* Near the top on mobile, below the header, full width — never covering it. */
+  .notif-banner {
+    top: calc(var(--topbar-h) + 8px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Gmail</title><desc id="desc">AlertHub gmail icon</desc>
+
+
+<defs><linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#EA4335"/><stop offset="1" stop-color="#C5221F"/></linearGradient></defs>
+<path d="M9 48V17.5c0-3.5 4-5.4 6.7-3.2L32 27.2l16.3-12.9c3.7-2.2 6.7-.3 6.7 3.2V48h-9.5V27.1L32 37 18.5 27.1V48H9Z" fill="#4285F4"/>
+<path d="M9 19.3c0-4.6 4.7-6.8 8.2-3.9L32 27.1l14.8-11.7c3.5-2.9 8.2-.7 8.2 3.9v2.4L32 39.5 9 21.7v-2.4Z" fill="#EA4335"/>
+<path d="M9 21.7 18.5 29v19H9V21.7Z" fill="#34A853"/>
+<path d="M45.5 29 55 21.7V48h-9.5V29Z" fill="#FBBC04"/>
+<path d="M9 19.3c0-4.6 4.7-6.8 8.2-3.9L32 27.1 18.5 37.6 9 30.2v-10.9Z" fill="#C5221F" opacity=".12"/>
+
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Tasks</title><desc id="desc">AlertHub tasks icon</desc>
+
+<defs><linearGradient id="t" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#25C89A"/><stop offset="1" stop-color="#59D5B0"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="16" fill="#102F35"/><rect x="13" y="10" width="38" height="44" rx="8" fill="url(#t)"/><path d="m22 31 7 7 14-16" fill="none" stroke="#092D2A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

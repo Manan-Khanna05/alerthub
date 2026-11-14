@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Shield</title><desc id="desc">AlertHub shield icon</desc>
+
+<g fill="none" stroke="#D6E3F8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 7 52 15v15c0 13-8 22-20 28C20 52 12 43 12 30V15L32 7Z"/><path d="m22 32 7 7 14-16"/></g>
+</svg>

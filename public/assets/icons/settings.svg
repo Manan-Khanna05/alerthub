@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Settings</title><desc id="desc">AlertHub settings icon</desc>
+
+<g fill="none" stroke="#D6E3F8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="8"/><path d="m26 8 2-3h8l2 3 6 3 4-1 5 7-2 4 1 7 3 3v8l-3 3-1 7 2 4-5 7-4-1-6 3-2 3h-8l-2-3-6-3-4 1-5-7 2-4-1-7-3-3v-8l3-3 1-7-2-4 5-7 4 1 6-3Z"/></g>
+</svg>

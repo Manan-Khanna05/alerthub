@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Webhook</title><desc id="desc">AlertHub webhook icon</desc>
+
+<defs><linearGradient id="w" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A66CFF"/><stop offset="1" stop-color="#5D77FF"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="16" fill="#241B49"/><circle cx="19" cy="20" r="6" fill="#D8C5FF"/><circle cx="45" cy="20" r="6" fill="#A78BFA"/><circle cx="32" cy="46" r="7" fill="url(#w)"/><path d="M24 23 29 39M40 23 35 39M25 20h14" stroke="#E6DAFF" stroke-width="3" stroke-linecap="round"/>
+</svg>

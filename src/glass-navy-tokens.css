@@ -1,0 +1,125 @@
+/* AlertHub — Glass Navy design tokens. Import into the existing app, do not replace its architecture.
+   Complete Glass Navy system (13 Nov 2026): deep aurora navy #071426, electric
+   blue / ocean cyan / soft violet accents. Two token families are kept in sync:
+   --ah-* (original names, used by components) and --app-bg / --surface-glass /
+   --accent-blue etc. (new aliases, used by styles.css). Both must stay working. */
+:root {
+  color-scheme: dark;
+  --ah-bg: #071426;
+  --ah-bg-elevated: #08172B;
+  --ah-panel: rgba(18, 34, 58, .62);
+  --ah-panel-strong: rgba(19, 39, 67, .82);
+  --ah-panel-soft: rgba(42, 64, 103, .28);
+  --ah-border: rgba(164, 190, 255, .15);
+  --ah-border-strong: rgba(164, 190, 255, .28);
+  --ah-text: #F3F6FF;
+  --ah-text-secondary: #A9BAD6;
+  --ah-text-muted: #8294B1;
+  --ah-primary: #647BFF;
+  --ah-primary-strong: #536FF0;
+  --ah-cyan: #28C6E8;
+  --ah-violet: #A56CFF;
+  --ah-success: #36D6A0;
+  --ah-warning: #F5BD62;
+  --ah-danger: #FB7D91;
+  /* Action icon colours (Glass Navy icon pack, 13 Nov 2026). UI icons are
+     inline SVG with stroke="currentColor", so they follow these tokens —
+     never a baked colour, and never browser-default black. Source logos
+     (Gmail/CUIMS/Tasks/…) are full-colour <img> and ignore these tokens. */
+  --ah-icon: #D6E3F8;
+  --ah-icon-hover: #A7BEFF;
+  --ah-icon-active: #B9A2FF;
+  --ah-icon-disabled: #5C6B84;
+  --ah-shadow: 0 16px 44px rgba(0, 0, 0, .24);
+  --ah-glass-blur: 18px;
+  --ah-radius-sm: 12px;
+  --ah-radius-md: 18px;
+  --ah-radius-lg: 24px;
+  --ah-space-1: 4px;
+  --ah-space-2: 8px;
+  --ah-space-3: 12px;
+  --ah-space-4: 16px;
+  --ah-space-5: 20px;
+  --ah-space-6: 24px;
+  --ah-motion-fast: 150ms;
+  --ah-motion-normal: 220ms;
+  --ah-ease: cubic-bezier(.2,.7,.2,1);
+  /* New alias names — same values as the --ah-* family above. */
+  --app-bg: #071426;
+  --surface-glass: rgba(18, 34, 58, .62);
+  --surface-glass-strong: rgba(19, 39, 67, .82);
+  --surface-glass-soft: rgba(42, 64, 103, .28);
+  --glass-border: rgba(164, 190, 255, .15);
+  --glass-highlight: rgba(255, 255, 255, .08);
+  --accent-blue: #647BFF;
+  --accent-cyan: #28C6E8;
+  --accent-violet: #A56CFF;
+  --text-primary: #F3F6FF;
+  --text-secondary: #A9BAD6;
+  --success: #36D6A0;
+  --warning: #F5BD62;
+  --danger: #FB7D91;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --ah-bg: #F2F6FC;
+  --ah-bg-elevated: #FFFFFF;
+  --ah-panel: rgba(255, 255, 255, .78);
+  --ah-panel-strong: rgba(255, 255, 255, .94);
+  --ah-panel-soft: rgba(238, 244, 255, .78);
+  --ah-border: rgba(63, 91, 143, .12);
+  --ah-border-strong: rgba(63, 91, 143, .2);
+  --ah-text: #14213A;
+  --ah-text-secondary: #52627C;
+  --ah-text-muted: #71809A;
+  --ah-primary: #536FF0;
+  --ah-primary-strong: #4258D8;
+  --ah-cyan: #12A5C4;
+  --ah-violet: #7C4DFF;
+  --ah-success: #1E9E6A;
+  --ah-warning: #B97A12;
+  --ah-danger: #D92D4A;
+  /* Light-theme action icons: dark slate-blue so they stay legible on
+     white glass (the dark #D6E3F8 would vanish here). */
+  --ah-icon: #3D5170;
+  --ah-icon-hover: #2C4A80;
+  --ah-icon-active: #5B3FD4;
+  --ah-icon-disabled: #9AA7BC;
+  --ah-shadow: 0 14px 38px rgba(38, 60, 100, .10);
+  /* Light aliases — premium light glass: white translucent panels on a
+     pale blue base, same blue/violet branding, deeper accents for contrast. */
+  --app-bg: #F2F6FC;
+  --surface-glass: rgba(255, 255, 255, .78);
+  --surface-glass-strong: rgba(255, 255, 255, .94);
+  --surface-glass-soft: rgba(238, 244, 255, .78);
+  --glass-border: rgba(63, 91, 143, .12);
+  --glass-highlight: rgba(255, 255, 255, .7);
+  --accent-blue: #536FF0;
+  --accent-cyan: #12A5C4;
+  --accent-violet: #7C4DFF;
+  --text-primary: #14213A;
+  --text-secondary: #52627C;
+  --success: #1E9E6A;
+  --warning: #B97A12;
+  --danger: #D92D4A;
+}
+.ah-glass, .glass {
+  background: var(--ah-panel);
+  border: 1px solid var(--ah-border);
+  box-shadow: var(--ah-shadow), inset 0 1px 0 rgba(255,255,255,.055);
+  -webkit-backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  backdrop-filter: blur(var(--ah-glass-blur)) saturate(135%);
+  border-radius: var(--ah-radius-lg);
+}
+.ah-glass-strong { background: var(--ah-panel-strong); border: 1px solid var(--ah-border-strong); border-radius: var(--ah-radius-lg); box-shadow: var(--ah-shadow); }
+.ah-interactive { transition: transform var(--ah-motion-fast) var(--ah-ease), border-color var(--ah-motion-fast) var(--ah-ease), background var(--ah-motion-fast) var(--ah-ease); }
+.ah-interactive:hover { transform: translateY(-1px); border-color: var(--ah-border-strong); }
+.ah-notice-enter { animation: ah-notice-in 220ms var(--ah-ease) both; }
+@keyframes ah-notice-in { from { opacity: 0; transform: translateY(-7px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.ah-bell-arrive { animation: ah-bell-arrive 520ms ease-in-out 1; transform-origin: 50% 22%; }
+@keyframes ah-bell-arrive { 0%,100% { transform: rotate(0); } 18% { transform: rotate(12deg); } 36% { transform: rotate(-10deg); } 54% { transform: rotate(7deg); } 72% { transform: rotate(-4deg); } }
+.ah-shimmer { background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.08) 45%, transparent 70%); background-size: 220% 100%; animation: ah-shimmer 1.6s linear infinite; }
+@keyframes ah-shimmer { to { background-position-x: -220%; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+/* Mobile fallback: keep readable opaque surfaces where backdrop-filter is unavailable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .ah-glass { background: #0F2038; } [data-theme="light"] .ah-glass { background: #FFFFFF; } }

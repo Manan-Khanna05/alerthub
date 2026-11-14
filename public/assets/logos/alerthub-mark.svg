@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Alerthub Mark</title><desc id="desc">AlertHub alerthub mark icon</desc>
+
+
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5E7BFF"/><stop offset=".55" stop-color="#7665F2"/><stop offset="1" stop-color="#A56CFF"/></linearGradient>
+ <linearGradient id="bell" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#C7E9FF"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.5"/></filter>
+</defs>
+<rect x="3" y="3" width="58" height="58" rx="17" fill="#5E7BFF" opacity=".22" filter="url(#shadow)"/>
+<rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bg)"/>
+<path d="M16 47c4-3 6-7 6-13v-4c0-7 4.2-12 10-12s10 5 10 12v4c0 6 2 10 6 13H16Z" fill="url(#bell)"/>
+<path d="M27 49c.8 3 2.5 4.5 5 4.5s4.2-1.5 5-4.5" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+<path d="M45 18c3 2 5 5 5.5 9M49 13c5 3 8 8 8.5 14" fill="none" stroke="#DDF6FF" stroke-width="2.8" stroke-linecap="round"/>
+
+</svg>

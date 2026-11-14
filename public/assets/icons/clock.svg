@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<title id="title">Clock</title><desc id="desc">AlertHub clock icon</desc>
+
+<g fill="none" stroke="#D6E3F8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="23"/><path d="M32 18v15l10 6"/></g>
+</svg>
