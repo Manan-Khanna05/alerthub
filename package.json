@@ -21,7 +21,8 @@
     "dev": "vite",
     "preview": "vite preview --port 4173",
     "typecheck": "tsc --noEmit",
-    "prebuild": "node scripts/generate-icons.mjs"
+    "prebuild": "node scripts/generate-icons.mjs",
+    "test": "node --test --experimental-test-module-mocks lib/store.test.ts"
   },
   "type": "module",
   "version": "1.0.0"

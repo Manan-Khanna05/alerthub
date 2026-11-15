@@ -111,16 +111,21 @@ export async function getAlerts(): Promise<Alert[]> {
 
 /**
  * Append an alert (replacing any existing alert with the same externalId),
- * trim to MAX_ALERTS newest, and persist. Returns the stored alert.
+ * trim to MAX_ALERTS newest, and persist. Returns true when the alert was
+ * kept, false when it is older than every stored alert and the trim would
+ * drop it — callers must never report a dropped alert as stored.
  */
-export async function saveAlert(alert: Alert): Promise<Alert> {
+export async function saveAlert(alert: Alert): Promise<boolean> {
   const existing = await getAlerts();
   const withoutDup = existing.filter((a) => a.externalId !== alert.externalId);
   const updated = [alert, ...withoutDup]
     .sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime())
     .slice(0, MAX_ALERTS);
+  // Persisting here would drop the alert we were just handed, and would also
+  // discard any older copy stored under the same externalId.
+  if (!updated.some((a) => a.externalId === alert.externalId)) return false;
   await kvGuard(() => kv.set(ALERTS_KEY, updated));
-  return alert;
+  return true;
 }
 
 // ---------------------------------------------------------------------------
