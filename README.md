@@ -23,7 +23,8 @@ npm run dev                  # http://localhost:5173
 ```
 
 Other scripts: `npm run build` (typecheck + Vite build), `npm run preview`,
-`npm run typecheck`.
+`npm run typecheck`, `npm test` (Node's built-in test runner — no test
+framework dependency).
 
 > Local dev note: the Vite dev server does **not** run the `api/` serverless
 > functions. To exercise the API locally, use `vercel dev` (Vercel CLI) or
@@ -150,7 +151,9 @@ failure never fails the ingest); the `201` response reports it as
 `push: { attempted, sent, failed }`. Normal/low events are stored only.
 
 Responses: `201` stored · `200` duplicate · `400` bad body ·
-`401` missing/wrong key · `429` over 60 requests/minute per key ·
+`401` missing/wrong key · `409` not stored (older than every stored alert
+while the store is full — the id is left unmarked so a re-send can work) ·
+`429` over 60 requests/minute per key ·
 `503` `INGEST_API_KEY` not configured or KV unavailable.
 
 ```bash
@@ -251,12 +254,20 @@ works over HTTPS on the installed app — not from a plain browser tab on iOS.
 ### Icons
 
 The PWA icons in `public/icons/` (`icon-192.png`, `icon-512.png`,
-`icon-512-maskable.png`, `apple-touch-icon.png`) are derived from the
-user's app icon (`alerthub-app-icon.png`, purple-blue gradient
-`#4169F5 → #8057E8`, white bell); `public/favicon.svg` is the same icon
-as SVG. If you clone the repo and the PNGs are missing, regenerate them
-from `public/favicon.svg` (or the original 512 px icon) before deploying
-— the manifest references the PNG paths. Keep the manifest identity
+`icon-512-maskable.png`, `apple-touch-icon.png`) are committed to the repo.
+They are rendered from `public/favicon.svg` (byte-identical to
+`public/assets/logos/app-icon.svg`): a blue-violet gradient
+`#5276FF → #7563F1 → #A66CFF` with a white bell. The maskable variant drops
+the rounded corners for a full-bleed background and scales the bell to 70%
+so it stays inside the Android safe zone; `apple-touch-icon.png` is
+full-bleed too, because iOS applies its own corner mask.
+
+**No script generates these PNGs.** `scripts/generate-icons.mjs` builds
+`src/components/iconData.generated.ts` (inline UI icon data) and never
+touches `public/icons/`. If the PNGs are lost, re-render them from
+`public/favicon.svg` with any SVG rasteriser at 192, 512, 512 and 180 px
+— `manifest.json`, `index.html` and `public/sw.js` all reference these
+exact paths. Keep the manifest identity
 (`AlertHub — Notification Command Center` / `AlertHub`) unchanged so the
 installed app updates seamlessly.
 

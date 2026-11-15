@@ -13,6 +13,7 @@
  *   400 invalid body (missing externalId/title, bad severity, bad
  *       sourceType, invalid academic payload, bad JSON)
  *   401 missing / wrong API key
+ *   409 not stored — older than every stored alert and the store is full
  *   429 more than 60 requests/minute for this API key
  *   503 INGEST_API_KEY not configured, or KV unavailable (no fake storage)
  *
@@ -236,7 +237,13 @@ export async function POST(req: Request): Promise<Response> {
       academic,
     };
 
-    await saveAlert(alert);
+    // Not marked as seen when it was not kept, so a later re-send can work.
+    if (!(await saveAlert(alert))) {
+      return error(
+        'Alert not stored: it is older than every stored alert and the store is full',
+        409,
+      );
+    }
     await markDuplicate(externalId);
 
     // Best-effort push for high-priority events (critical/important severity
